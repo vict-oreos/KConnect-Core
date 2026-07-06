@@ -1,0 +1,20 @@
+kprobe:tcp_connect
+{
+	$sk = (struct sock*)arg0;
+	$daddr=ntop($sk->__sk_common.skc_daddr);
+	$dport=bswap($sk->__sk_common.skc_dport);
+	$sport=$sk->__sk_common.skc_num;
+
+	printf("%d|%s|TCP|%s|%d|%d\n",pid,comm,$daddr,$dport,$sport);
+}
+                                                                 
+kprobe:udp_sendmsg
+{
+        $sk = (struct sock*)arg0;
+        $daddr=ntop($sk->__sk_common.skc_daddr);
+        $dport=bswap($sk->__sk_common.skc_dport);
+        $sport=$sk->__sk_common.skc_num;
+
+        printf("%d|%s|TCP|%s|%d|%d\n",pid,comm,$daddr,$dport,$sport);
+}
+
